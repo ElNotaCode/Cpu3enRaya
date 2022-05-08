@@ -87,7 +87,9 @@ public class Cpu {
 				primeraTirada();
 			}
 			//turno 3 intenta jugada
-			
+			if(numeroTurno == 3 || numeroTurno == 4) {
+				segundaTirada();
+			}
 			//turno 4 intenta bloquear
 			
 			//se pasa el turno
@@ -122,6 +124,68 @@ public class Cpu {
 		}while(!comprobarFicha(i,j));
 		tablero[i][j] = 'O';
 	}
+	
+	public static void colocarAlrededor(int i, int j) {
+		//miramos al rededor de la posición
+		/*	    j0    j1   j2
+		 * i0 [0 0] [0 1] [0 2]
+		 * i1 [1 0] [1 1] [1 2]
+		 * i2 [2 0] [1 2] [2 2]
+		 */
+		//!comprobarFicha(i, j) && i<0 && i>2 && j<0 && j>2
+		int ii = i;
+		int jj = j;
+		
+		//top
+		--ii;
+		if(comprobarFicha(ii, jj)) {
+			tablero[ii][jj] = 'O';
+		}
+		
+		//top right
+		--jj;
+		if(comprobarFicha(ii, jj)) {
+			tablero[ii][jj] = 'O';
+		}
+		
+		//top left
+		jj =+2;
+		if(comprobarFicha(ii, jj)) {
+			tablero[ii][jj] = 'O';
+		}
+		
+		//left
+		ii= i;
+		jj = j-1;
+		if(comprobarFicha(ii, jj)) {
+			tablero[ii][jj] = 'O';
+		}
+		//right
+		jj = j+1;
+		if(comprobarFicha(ii, jj)) {
+			tablero[ii][jj] = 'O';
+		}
+		//down
+		--ii;
+		jj = j;
+		if(comprobarFicha(ii, jj)) {
+			tablero[ii][jj] = 'O';
+		}
+		
+		//down left
+		jj--;
+		if(comprobarFicha(ii, jj)) {
+			tablero[ii][jj] = 'O';
+		}
+		
+		//down right
+		jj += 2;
+		if(comprobarFicha(ii, jj)) {
+			tablero[ii][jj] = 'O';
+		}
+		
+	}
+	
 	//tirada turno 3 intenta seguir jugada o tirada turno 4 intenta bloquear
 	public static void segundaTirada() {
 		//si es el turno 3 recorre el array y intenta poner una ficha al lado
@@ -130,23 +194,7 @@ public class Cpu {
 			for (int j = 0; j < tablero[i].length; j++) {
 				//detectamos la ficha
 				if(tablero[i][j] == 'O') {
-					//miramos al rededor de la posición
-					/*	    j0    j1   j2
-					 * i0 [0 0] [0 1] [0 2]
-					 * i1 [1 0] [1 1] [1 2]
-					 * i2 [2 0] [1 2] [2 2]
-					 */
-					//!comprobarFicha(i, j) && i<0 && i>2 && j<0 && j>2
-					int ii = i;
-					int jj = j;
-					
-					//top
-					--ii;
-					if(!comprobarFicha(ii, j)) {
-						
-					}
-					
-					
+					colocarAlrededor(i,j);
 					
 				}
 			}
