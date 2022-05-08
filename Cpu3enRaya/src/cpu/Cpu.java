@@ -97,17 +97,18 @@ public class Cpu {
 	}
 	//metodo comprobar
 	public static boolean comprobarFicha(int i, int j) {
-		//si hay espacio true
-		if(tablero[i][j] == ' ') {
+		
+		//controlar el out of bounds
+		if((i<0 || i>2) || (j<0 || j>2)) {
+			return false;
+			//si hay espacio true
+		}else if(tablero[i][j] == ' ') {
 			return true;
 		}else {
 			if(jugador) {
 				System.out.println("Casilla ocupada:");
-				return false;
-			}else {
-				return false;
 			}
-			
+			return false;
 		}
 	}
 	
@@ -130,11 +131,22 @@ public class Cpu {
 				//detectamos la ficha
 				if(tablero[i][j] == 'O') {
 					//miramos al rededor de la posición
-					/*	   j0  j1  j2
+					/*	    j0    j1   j2
 					 * i0 [0 0] [0 1] [0 2]
 					 * i1 [1 0] [1 1] [1 2]
 					 * i2 [2 0] [1 2] [2 2]
 					 */
+					//!comprobarFicha(i, j) && i<0 && i>2 && j<0 && j>2
+					int ii = i;
+					int jj = j;
+					
+					//top
+					--ii;
+					if(!comprobarFicha(ii, j)) {
+						
+					}
+					
+					
 					
 				}
 			}
