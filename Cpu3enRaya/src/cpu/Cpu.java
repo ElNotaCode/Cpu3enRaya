@@ -29,7 +29,7 @@ public class Cpu {
 	public static void imprimirTablero() {
 		
 		if(jugador) {
-			System.out.println("TRUNO DEL JUGADOR");
+			System.out.println("TURNO DEL JUGADOR");
 		}else {
 			System.out.println("TURNO DE LA CPU");
 		}
@@ -75,7 +75,6 @@ public class Cpu {
 		//fase 1
 		//if jugador else cpu
 		if(jugador) {
-
 			//tiramos
 			tiradaJugador();
 			//pasamos turno
@@ -110,16 +109,18 @@ public class Cpu {
 		//comportamiento de la cpu segun el turno
 		//turno 1 o 2 coloca random
 		if(numeroTurno == 1 || numeroTurno == 2) {
-			primeraTiradaCpu();
+			tiradaAleatoriaCpu();
 		}else if(numeroTurno == 3) { //turno 3 intenta jugada
 			segundaTiradaCpu();
-		}else{
-			demasTiradasCpu(); //turno 4 o mas intenta bloquear
+		}else if (numeroTurno <= 6){
+			tiradasCpuFase1(); //turno 4 o mas intenta bloquear
+		}else {
+			
 		}
 	}
 	
 	//primera tirada (turno 1 o 2)
-	public static void primeraTiradaCpu() {
+	public static void tiradaAleatoriaCpu() {
 		int i;
 		int j;
 		do {
@@ -129,7 +130,7 @@ public class Cpu {
 		tablero[i][j] = 'O';
 	}
 
-	//tirada turno 3 intenta seguir jugada o tirada turno 4 intenta bloquear
+	//tirada turno 3 intenta seguir jugada o
 	public static void segundaTiradaCpu() {
 		//si es el turno 3 recorre el array y intenta poner una ficha al lado
 			for (int i = 0; i < tablero.length; i++) {
@@ -137,13 +138,13 @@ public class Cpu {
 					//detectamos la ficha
 					if(tablero[i][j] == 'O') {
 						colocarAlrededor(i,j);
-						
+						break;
 					}
 				}
 			}
 	}
-	
-	public static void demasTiradasCpu() {
+	// tirada turno 4 o mas intenta bloquear
+	public static void tiradasCpuFase1() {
 		//si es el turno 4 o mas va a bloquear
 		for (int i = 0; i < tablero.length; i++) {
 			for (int j = 0; j < tablero[i].length; j++) {
@@ -165,24 +166,24 @@ public class Cpu {
 		/*	    j0    j1   j2
 		 * i0 [0 0] [0 1] [0 2]
 		 * i1 [1 0] [1 1] [1 2]
-		 * i2 [2 0] [1 2] [2 2]
+		 * i2 [2 0] [2 1] [2 2]
 		 */
 		int ii = i;
 		int jj = j;
 		
-		//top and block down
+		//top 0 1 and block down 1 2
 		--ii;
 		if(comprobarFicha(ii, jj)) {
 			if(tablero[ii][jj] == 'X') {
 				//si coincide miramos de colocarla en la parte contraria
 				if(comprobarFicha(ii+2, jj)){
 					tablero[ii+2][jj] = 'O';
-					return;
+					return; //return para salir del metodo
 				}
 			}
 		}
 		
-		//top left block bot right
+		//top left 0 0 block bot right 2 2
 		--jj;
 		if(comprobarFicha(ii, jj)) {
 			if(tablero[ii][jj] == 'X') {
@@ -194,7 +195,7 @@ public class Cpu {
 			}
 		}
 		
-		//top right to block bot left
+		//top right 0 2 to block bot left 2 0
 		jj =+2;
 		if(comprobarFicha(ii, jj)) {
 			if(tablero[ii][jj] == 'X') {
@@ -283,50 +284,52 @@ public class Cpu {
 	
 	//metodo que mira alrededor de la ficha y intenta colocar otra
 	public static void colocarAlrededor(int i, int j) {
-		//miramos al rededor de la posición
+		//miramos al rededor de la posición a la primera libre coloca
 		/*	    j0    j1   j2
 		 * i0 [0 0] [0 1] [0 2]
 		 * i1 [1 0] [1 1] [1 2]
-		 * i2 [2 0] [1 2] [2 2]
+		 * i2 [2 0] [2 1] [2 2]
 		 */
+		
+		//imaginamos que es 1 1
 		int ii = i;
 		int jj = j;
 		
-		//top
+		//top 0 1
 		--ii;
 		if(comprobarFicha(ii, jj)) {
 			tablero[ii][jj] = 'O';
-			return;
+			return; //return para que no coloque mas
 		}
 		
-		//top right
+		//top left 0 0
 		--jj;
 		if(comprobarFicha(ii, jj)) {
 			tablero[ii][jj] = 'O';
 			return;
 		}
 		
-		//top left
-		jj =+2;
+		//top r 0 2
+		jj = j+2;
 		if(comprobarFicha(ii, jj)) {
 			tablero[ii][jj] = 'O';
 			return;
 		}
 		
-		//left
+		//left 1 0
 		ii= i;
 		jj = j-1;
 		if(comprobarFicha(ii, jj)) {
 			tablero[ii][jj] = 'O';
 			return;
 		}
-		//right
+		//right 1 2
 		jj = j+1;
 		if(comprobarFicha(ii, jj)) {
 			tablero[ii][jj] = 'O';
 			return;
 		}
-		//down
+		//down 2 1
 		--ii;
 		jj = j;
 		if(comprobarFicha(ii, jj)) {
@@ -334,23 +337,27 @@ public class Cpu {
 			return;
 		}
 		
-		//down left
+		//down left 2 0
 		jj--;
 		if(comprobarFicha(ii, jj)) {
 			tablero[ii][jj] = 'O';
 			return;
 		}
 		
-		//down right
-		jj += 2;
+		//down right 2 2
+		jj = j+2;
 		if(comprobarFicha(ii, jj)) {
 			tablero[ii][jj] = 'O';
 			return;
 		}
 		
+		//si nada funcionase, tira aleatoriamente
+		tiradaAleatoriaCpu();
 		//TODO: mirar forma de randomizar el patrón
 		
 	}
+	
+	
 	
 	//metodo comprobar victoria
 	public static boolean comprobarVictoria() {
